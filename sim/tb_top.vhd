@@ -75,10 +75,8 @@ architecture Behavioral of tb_top is
     signal tx_start_i       :   std_logic                           := '1';
     signal tx_done_tick_o   :   std_logic                           := '0';
     signal din_i            :   std_logic_vector(7 downto 0)        := (others =>'0'); 
-    signal incoming_message :   std_logic                           := '0';
     signal dout_o			:   std_logic_vector (7 downto 0)       := (others =>'0');
     signal rx_done_tick		:   std_logic                           := '0';
-    signal write_ready		:   std_logic                           := '0';
     signal test_dout_buf    :   std_logic_vector(5*8-1 downto 0)    := (others => '0');     
     
     constant TEST_FILE_RD :string  := "C:\Users\Murat\PycharmProjects\python_project\test_input.txt" ;
