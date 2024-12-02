@@ -3,7 +3,7 @@
 -- Project Name  : 
 --
 -- Design Name   : -
--- File Name     : MessagePacketController.vhd
+-- File Name     : packet_controller.vhd
 -- Tool versions : Vivado 2021.1, VHDL
 -- Description   : 
 --
@@ -14,21 +14,22 @@
 -- 0v1    23.11.2024  Murat ALKAN          	First Release
 --
 ------------------------------- Notes ----------------------------------------------- 
--- 0xBACD001000200049 mesajina cevap : 0xABCD003058
--- 0xBACD001000200148 mesajina cevap : 0xABCDFFF099
+-- Message 0xBACD001000200049 Response: 0xABCD003058
+-- Message 0xBACD001000200148 Response: 0xABCDFFF099
 
---Ornek gelen mesaj: 0xBACD001000200049
--- 0xBACD header
--- 0x0010 Num1 (decimal 16) 
--- 0x0020 Num2 (decimal 32) 
--- 0x00 opcode
--- 0x49 checksum
--- Hepsini topla 0x200 yapar.
--- Bu mesaj geldiginde istenilen islem yapilip sonuc asagidaki formatta cevap olarak donulecektir:
+-- Example incoming message: 0xBACD001000200049
+-- 0xBACD: Header
+-- 0x0010: Num1 (decimal 16)
+-- 0x0020: Num2 (decimal 32)
+-- 0x00: Opcode
+-- 0x49: Checksum
+-- Adding them all results in 0x200.
+
+-- When this message is received, the required operation will be performed, 
+-- and the result will be returned in the following format:
 -- Header: 0xABCD
--- Result   : 2 byte
--- Checksum : 1 byte
-
+-- Result: 2 bytes
+-- Checksum: 1 byte
 ----------------------------------------------------------------------------------
 
 library IEEE;
@@ -98,7 +99,6 @@ if (rising_edge(clk)) then
         result                  <= (others => '0');
         checksum_calculation    <= (others => '0');
         xmit_buffer             <= (others => '0');
-        xmit_checksum           <= (others => '0');
         state                   <= s_IDLE;
         counter_for_transmit    <= 4;
         tx_start_o	            <= '0';
@@ -174,8 +174,8 @@ end if;
 end process;
 
 xmit_checksum <= std_logic_vector(unsigned(zero) 
-- unsigned(std_logic_vector(to_unsigned((to_integer(unsigned(c_header_2(15 downto 8))) + to_integer(unsigned(c_header_2(7 downto 0))) 
-+ to_integer(unsigned(result(15 downto 8)))
-+ to_integer(unsigned(result(7 downto 0)))) mod 256, 8))));
+                - unsigned(std_logic_vector(to_unsigned((to_integer(unsigned(c_header_2(15 downto 8))) + to_integer(unsigned(c_header_2(7 downto 0))) 
+                + to_integer(unsigned(result(15 downto 8)))
+                + to_integer(unsigned(result(7 downto 0)))) mod 256, 8))));
    
 end architecture;

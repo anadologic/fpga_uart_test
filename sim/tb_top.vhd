@@ -28,7 +28,7 @@ architecture Behavioral of tb_top is
     component top is
         port (
             clk     : in std_logic;
-            reset   : in std_logic; -- (active-high synchronous reset)
+            rst   : in std_logic; -- (active-high synchronous reset)
             rx_i    : in std_logic; -- (uart receiver port)
             tx_o    : out std_logic -- (uart transmitter port)
         );
@@ -67,7 +67,7 @@ architecture Behavioral of tb_top is
 
     --Top Level Signals
     signal clk              :   std_logic := '0';
-    signal reset            :   std_logic := '0';
+    signal rst            :   std_logic := '0';
     signal rx_i             :   std_logic := '1'; -- Idle state is HIGH for UART
     signal tx_o             :   std_logic ;
     
@@ -81,15 +81,14 @@ architecture Behavioral of tb_top is
     signal write_ready		:   std_logic                           := '0';
     signal test_dout_buf    :   std_logic_vector(5*8-1 downto 0)    := (others => '0');     
     
-    constant TEST_FILE_RD :string  := "your_path_here/test_in.txt" ;
-    constant TEST_FILE_WD :string  := "your_path_here/test_out.txt";
-    
+    constant TEST_FILE_RD :string  := "C:\Users\Murat\PycharmProjects\python_project\test_input.txt" ;
+    constant TEST_FILE_WD :string  := "C:\Users\Murat\PycharmProjects\python_project\test_output.txt";
 begin
 
     uut: top
         port map (
             clk  => clk,
-            reset  => reset,
+            rst  => rst,
             rx_i => rx_i,
             tx_o => tx_o  
         );
@@ -192,11 +191,11 @@ begin
     
     begin 
         -- Initial reset
-        reset <= '0';
+        rst <= '0';
         wait for 5*clk_period;
-        reset  <= '1';
+        rst  <= '1';
         wait for 5*clk_period;
-        reset <= '0';
+        rst <= '0';
         wait for 5*clk_period;
     
         test_with_pythone_file(TEST_FILE_RD, TEST_FILE_WD);
